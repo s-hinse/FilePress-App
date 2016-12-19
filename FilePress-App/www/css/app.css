@@ -1,0 +1,43 @@
+.text-centered {
+	text-align: center;
+}
+
+#login-form {
+	max-width: 300px;
+	float: none;
+	margin: 0 auto;
+}
+
+.margin-top-small {
+	margin-top: 20px;
+}
+
+.table > tbody > tr > td {
+	vertical-align: middle;
+}
+
+.edit-user, .add-user {
+	display: none;
+	margin-bottom: 20px;
+}
+
+#sub-view-container h1 {
+	display: inline-block
+}
+
+#show-add-user-form {
+	margin-left: 50px;
+	margin-bottom: 20px;
+}
+#user-table td{
+	padding-left: 18px;
+}
+#user-table tr.edit-user td {
+	padding-left:6px;
+
+}
+
+#upload-file-wrapper {
+	display: none;
+}
+

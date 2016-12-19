@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html>
+    <head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"/>
+    <!--
+        Passen Sie die Inhaltssicherheitsrichtlinie im META-Tag unten nach Bedarf an. Fügen Sie "default-src" die Option "unsafe-inline" hinzu, um Inline-JavaScript zu aktivieren.
+        Details finden Sie unter "http://go.microsoft.com/fwlink/?LinkID=617521".
+    -->
+        <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *">
+        
+        <meta name="format-detection" content="telephone=no">
+        <meta name="msapplication-tap-highlight" content="no">
+        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
+        <link rel="stylesheet" href="css/bootstrap.css">
+        <!-- link rel="stylesheet" href="css/bootstrap-theme.css" -->
+        <link rel="stylesheet" href="css/app.css">
+        <title>FilePressApp</title>
+    </head>
+    <body>
+        <section id="app-container" class="container-fluid"></section>
+
+        <!-- Modal -->
+        <div id="messageModal" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title"></h4>
+                    </div>
+                    <div class="modal-body">
+                        <p></p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Templates -->
+        <script type="text/template" id="login-template">
+
+
+            <div class=row">
+
+                <h1 class="text-centered">FilePress Login</h1>
+
+                <form id="login-form">
+                    <div class="form-group">
+                        <label for="user">User</label> <input type="text" id="user" class="form-control">
+                    </div>
+
+                    <div class="form-group"><label for="password">Password</label><input type="password" id="password" class="form-control"></div>
+
+                    <button type="submit" id="send-button" class="btn btn-primary btn-lg btn-block">Login</button>
+
+                </form>
+
+            </div>
+
+
+        </script>
+        <!-- menu template, adapted from bootstrap menu example !-->
+        <script type="text/template" id="menu-template">
+            <nav class="navbar navbar-default">
+                <div class="container-fluid">
+
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                            <span class="sr-only">Toggle navigation</span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+                        <a class="navbar-brand" href="#">FilePress</a>
+                    </div>
+
+                    <!-- Collect the nav links, forms, and other content for toggling -->
+                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                        <ul class="nav navbar-nav">
+                            <li><a href="#" id="users-view">Manage users </a></li>
+                            <li><a href="#" id="files-view">Manage files</a></li>
+
+                        </ul>
+
+                        <ul class="nav navbar-nav navbar-right">
+                            <li class="navbar-text">Howdy, <%= user %>!</li>
+                            <li><a id="logout" href="#">Log out</a></li>
+
+                        </ul>
+                    </div><!-- /.navbar-collapse -->
+                </div><!-- /.container-fluid -->
+            </nav>
+            <section id="sub-view-container"></section>
+        </script>
+
+
+        <!-- User Template -->
+        <script type="text/template" id="users-template">
+            <h1>Manage Users</h1>
+            <button id="show-add-user-form" type="button" class="btn btn-default">Add new user</button>
+
+            <table class="table table-responsive table-responsive">
+                <thead>
+                <th>Username</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>E-Mail</th>
+                <th>User Role</th>
+                </thead>
+                <tbody id="user-table"></tbody>
+            </table>
+        </script>
+
+
+        <!-- Single user template -->
+
+        <script type="text/template" id="user-single-template">
+
+            <td><%= username %></td>
+            <td><%=first_name %></td>
+            <td><%=last_name %></td>
+            <td><%=email %></td>
+            <td><%= roles[0] %></td>
+            <td>
+                <button type="button" name="<%= id %>" class="btn btn-default edit-user-btn">Edit User</button>
+            </td>
+            <td></td>
+
+        </script>
+
+        <!-- Single user edit template -->
+
+        <script type="text/template" id="edit-user-single-template">
+
+            <td></td>
+            <td><input class="form-control" id="first-name<%= id %>" value="<%=first_name %>"></td>
+            <td><input class="form-control" id="last-name<%= id %>" value="<%=last_name %>"></td>
+            <td><input class="form-control" id="email<%= id %>" value="<%=email %>"></td>
+            <td>
+                <select class="form-control" id="role<%= id %>">
+                    <option value="administrator">Administrator</option>
+                    <option value="contributor">Contributor</option>
+
+                </select>
+            </td>
+
+            <td>
+                <button type="button" name="<%= id %>" class="btn btn-default save-changes-btn">Save changes</button>
+
+            </td>
+            <td>
+                <button type="button" name="<%= id %>" class="btn btn-default delete-user-btn">Delete User</button>
+            </td>
+
+        </script>
+
+        <!-- Add User template -->
+
+        <script type="text/template" id="add-user-template">
+            <form id="add-user">
+                <table class="table table-responsive table-responsive">
+                    <thead>
+                    <th>Username</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>E-Mail</th>
+                    <th>User Role</th>
+                    <th>Password</th>
+                    </thead>
+                    <tbody id="add-user-table" class="alert-warning">
+
+                    <td><input class="form-control" id="name" required></td>
+                    <td><input class="form-control" id="first-name"></td>
+                    <td><input class="form-control" id="last-name"></td>
+                    <td><input class="form-control" id="email" type="email" required></td>
+                    <td>
+                        <select class="form-control" id="role">
+                            <option value="administrator">Administrator</option>
+                            <option value="contributor">Contributor</option>
+                        </select>
+                    </td>
+                    <td><input class="form-control" id="user-password" type="password" required></td>
+
+                    <td>
+                        <button type="submit" class="btn btn-default">Add new user</button>
+                    </td>
+                    </tbody>
+                </table>
+            </form>
+        </script>
+
+        <!--files template -->
+
+        <script type="text/template" id="files-template">
+            <h1>File Management</h1>
+
+            <button id="show-upload-file-form" type="button" class="btn btn-default">Upload file</button>
+            <div id="upload-file-wrapper"></div>
+
+            <table class="table table-responsive table-responsive">
+                <thead>
+                <th>Filename</th>
+                <th>File size</th>
+                <th>Creation Date</th>
+                <th>created by</th>
+
+                </thead>
+                <tbody id="files-table"></tbody>
+            </table>
+        </script>
+
+
+        <!-- upload file template -->
+        <script type="text/template" id="upload-file-template">
+
+            <form id="upload-file" class="form-group alert-warning">
+                <label for="file-input" class="control-label">Select file for upload.</label>
+                <input class="form-control" type="file" id="file-input">
+                <button type="submit" class="btn btn-default form-inline">Upload file</button>
+            </form>
+        </script>
+
+
+        <!-- single file template -->
+
+        <script type="text/template" id="file-single-template">
+
+            <td><%= title.rendered %></td>
+            <td><%= content.rendered %></td>
+            <td><%=date %></td>
+            <td id="author"></td>
+            <td></td>
+            <td>
+                <button type="button" name="<%= id %>" class="btn btn-default download-file-btn">Download file</button>
+
+            </td>
+            <td>
+                <button type="button" name="<%= id %>" class="btn btn-default delete-file-btn">Delete file</button>
+            </td>
+
+        </script>
+
+        <script type="text/javascript" src="cordova.js"></script>
+      <script type="text/javascript" src="scripts/platformOverrides.js"></script>
+        <script type="text/javascript" src="scripts/index.js"></script>
+    </body>
+</html>

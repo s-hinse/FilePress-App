@@ -1,0 +1,17 @@
+{
+  "name": "FilePress",
+  "version": "1.0.0",
+  "description": "SPA for sharing files via WordPress REST API",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Sven Hinse",
+  "dependencies": {
+    "jquery": ">=3.1.0",
+    "underscore": ">= 1.8.3",
+    "backbone":">=1.3.3",
+    "bootstrap":">=3.3.6"
+  },
+  "license": "GPL"
+}
